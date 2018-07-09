@@ -1,1 +1,41 @@
+SQL tutorial from udemy. By colt:
+1. Tutorial is based on MySql database. We are not trying to install MySql here. We will be using a container on c9.io website to run the mySql db.
+2. Login to the c9 service. Create a new workspace and select any of the profile. We have selected html for minimal settings. Follow the below commands to use the mysql service.
+	1. mysql-ctl start - Starts the db.
+	2. mysql-ctl cli - Gives you the command line interface of the db.
+	3. mysql-ctl stop - Stops the db services from running on the container.
+	
+3. Few more commands that you can try to execute on the sql cli are as follows:
+	1. help - gives you the help menu. usgae help, help Integer etc.,
+	2. select @@hostname - gives your name or the user session name.
+	3. show databases - shows all the databases present in the database server.
+	
+SQL is case insensitive CREATE or create is same.
+More preferably use CAPS.
 
+Creating a database:
+	CREATE DATABASE DB_NAME; Ex: CREATE DATABASE DogApp; or CREATE DATABASE soap_app;
+
+Deleting a database:
+		DROP DATABASE DB_NAME; Ex: DROP DATABASE DogApp;
+
+Using a specific database:
+	- Use the "USE" key word to specific which database you want to use to execute the later queries on.
+	Ex: USE DB_NAME;
+	- To confirm that you are using a specific database use the following command.
+		select database(); -> Output should be DB_NAME;
+	- If you are not using any database the result would be "null".
+
+Tables: 
+	- Store data in a relational structure.
+	- Bascially in rows and columns.
+	- An app can have many tables. Too many tables.
+	- NOT ALL DATABASES USE TABLES TO STORE DATA.
+Data Types:
+	- Every column must specify what type of data it must hold. 
+	- There are several data types available.
+	- Primary types are classified as follows:
+		1) Numerics : INT, SMALLINT, LONGINT,MEDIUMINT,BIGINT,DECIMAL,NUMERIC,FLOAT,DOUBLE,BIT
+		2) Strings : CHAR, VARCHAR,BINARY,VARBIARY,BLOB,TINYBLOB,MEDIUMBLOB,LONGBLOB,TEXT,TINYTEXT,MEDIUMTEXT,LONGTEXT,ENUM
+		3) Date : DATE, DATETIME, TIMESTAMP, TIME, YEAR.
+		

@@ -38,4 +38,21 @@ Data Types:
 		1) Numerics : INT, SMALLINT, LONGINT,MEDIUMINT,BIGINT,DECIMAL,NUMERIC,FLOAT,DOUBLE,BIT
 		2) Strings : CHAR, VARCHAR,BINARY,VARBIARY,BLOB,TINYBLOB,MEDIUMBLOB,LONGBLOB,TEXT,TINYTEXT,MEDIUMTEXT,LONGTEXT,ENUM
 		3) Date : DATE, DATETIME, TIMESTAMP, TIME, YEAR.
+
+Initially we are gonna deal with two datatypes 
+	Int - stores number, even negative!(SIGNED) Has a upper range. If you need to store a larger number than the upper ranger, look for a different data type.
+	VARCHAR - Variable character, can store strings up to 255 character length. We can specify a limit on character length Ex; Name VARCHAR(10) - Name can have only 10 characters.
+	
+Table Creation:
+	Syntax:
+		CREATE TABLE table_name(
+			column_name, data_type,
+			column_name, data_type,..
+			);
+	
+	- SHOW TABLES; //Shows list of all the tables in the current database.
+	- SHOW COLUMNS FROM table_name; OR DESC table_name; //Shows columns, their type and bunch of other infromation associated with the columns.
+
+	- Deleting a table from the data base.
+		DROP TABLE table_name; //Similar to dropping a database.
 		

@@ -1,4 +1,10 @@
 SQL tutorial from udemy. By colt:
+A database is a collection of data which can be manipulated by the tools provided in the database engine.
+
+	Your App =====> || DBMS + DATABASE ||
+
+SQL : Structured Query Langauge (Think it as a language you used to talk to databases)
+
 1. Tutorial is based on MySql database. We are not trying to install MySql here. We will be using a container on c9.io website to run the mySql db.
 2. Login to the c9 service. Create a new workspace and select any of the profile. We have selected html for minimal settings. Follow the below commands to use the mysql service.
 	1. mysql-ctl start - Starts the db.
@@ -6,9 +12,9 @@ SQL tutorial from udemy. By colt:
 	3. mysql-ctl stop - Stops the db services from running on the container.
 	
 3. Few more commands that you can try to execute on the sql cli are as follows:
-	1. help - gives you the help menu. usgae help, help Integer etc.,
-	2. select @@hostname - gives your name or the user session name.
-	3. show databases - shows all the databases present in the database server.
+	1. help; - gives you the help menu. usgae help, help Integer etc.,
+	2. select @@hostname; - gives your name or the user session name.
+	3. show databases; - shows all the databases present in the database server.
 	
 SQL is case insensitive CREATE or create is same.
 More preferably use CAPS.

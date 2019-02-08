@@ -80,3 +80,44 @@ Inserting data into the table:
 				(col1_value2, col2_value2,...),
 				.....
 				(col1_valuen, col2_valuen,...);
+
+SHOW WARNINGS; Displays all the warning that was encountered while executing the last query, if there is any.
+				- Often times, database is run on strict mode. When it is, the users are not allowed to insert invalid data in to the tables.
+				- If also, goes with the length limit that is placed on the field.
+				- In strict mode all the warnings could end up being an error.
+				- In order to change the strict mode, enter the query below:
+					SET @@global.sql_mode= '';
+				- To enable the strict mode back, enter the query below:
+					set @@global.sql_mode='STRICT_TRANS_TABLES'
+
+NOT NULL: If a field is specified as NOT NULL while creation of the table, then NULL values are not permitted in the records.
+			- If you do not provide a value for a field which is declared as NOT NULL while inserting a value in to the records, it will insert a default value. (You can customize the default values too while creating the table)
+			Ex: CREATE TABLE table_name(
+					name VARCHAR(100) NOT NULL,
+					age INT NOT NULL
+				);
+
+DEFAULT: While creating a field if default value is specified, then this value will be replaced, if the user does not specify any value for the field during inserting the record.
+		- Note: However, NULL is still a value. Hence, if you specify a defaul value and do not set the field to be NOT NULL. Something like this is still valid.
+			INSERT INTO table_name 
+			VALUES(NULL, NULL,....)	
+
+		Ex: CREATE TABLE table_name(
+				name VARCHAR(50) NOT NULL DEFAULT 'Anonymous',
+				age INT NOT NULL DEFAULT 999999
+			);		
+
+PRIMARY KEY:
+	If a field is declared as a primary key, it can be used as a unique identifier for a record.
+		- A primary key can only have unique values.
+		- Once a primary key is deleted from the records, it cannot be reused.
+		- We can set a primary key to Auto_Increment(If numeric)
+		- A primary key can accept one NULL value(Not suggested)
+
+	Ex: CREATE TABLE table_name(
+		identifier INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+		name VARCHAR(50) NOT NULL DEFAULT 'no name'
+		age INT NOT NULL DEFAULT 99
+	);
+
+	

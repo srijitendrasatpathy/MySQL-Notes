@@ -58,7 +58,25 @@ Table Creation:
 	
 	- SHOW TABLES; //Shows list of all the tables in the current database.
 	- SHOW COLUMNS FROM table_name; OR DESC table_name; //Shows columns, their type and bunch of other infromation associated with the columns.
-
+	- DESCRIBE table_name; //Show all details related to the table.
 	- Deleting a table from the data base.
 		DROP TABLE table_name; //Similar to dropping a database.
-		
+	
+Inserting data into the table:
+	INSERT INTO table_name(column_name1, column_name2,...) 
+	VALUES (column1_value,column2_value...);
+
+	- While using the above fromat you need specifiy the columns in their right order as they are in the table. You can change them up, but make sure to maintain the same order in the values field.
+	INSERT INTO table_name(column_name4, column_name534,....)
+	VALUES(columns4_value, column534_value....)
+
+	- If you are maintaining the column order that is present in the table, you need not speicify the column names after table_name. You can directly just write the values.
+	INSERT INTO table_name
+	VALUES(column1_value, columne2_value, column3_value,...)
+
+	BULK INSERT:
+		INSERT INTO table_name
+		VALUES (col1_value, cole2_value,...),
+				(col1_value2, col2_value2,...),
+				.....
+				(col1_valuen, col2_valuen,...);

@@ -120,4 +120,65 @@ PRIMARY KEY:
 		age INT NOT NULL DEFAULT 99
 	);
 
-	
+CRUD:
+	Stands for 
+	C - Create Data
+	R - Read Data
+	U - Update Data
+	D - Delete Data
+
+SELECT Clause:
+	- Select is used to retrieve information from the table.
+	- Some of the possibilites for SELECT clause are given below:
+		SELECT * FROM cats;  //Used to select all the columns and data in the cats table.
+		SELECT name FROM cats;  //Used to select all the records of the column name in cats table.
+		SELECT age FROM cats; //Used to select all the records of the column age in cats table.
+		SELECT cat_id FROM cats; //Used to select all the records of the column cat_id in cats table.
+		SELECT name, age FROM cats; 
+		SELECT cat_id, name, age FROM cats; 
+		SELECT age, breed, name, cat_id FROM cats; 
+		SELECT cat_id, name, age, breed FROM cats; 
+
+		- An alias as a text that is used to replace the text used to identify the field name while displaying the content.
+		Ex: Select cat_id AS Identification from cats;
+		+------------------+
+		|	Identification |
+		+------------------+
+WHERE Clause:
+	- Where clause is used to filter out the content.
+	- You specify a criteria and any records that satisfy the criteria is retrieved and rest are discarded.
+	- String criteria in WHERE is case insensitive. 
+	Ex: WHERE name ="eGG" or WHERE name ="EGG" will retrieve the same records out from the database.
+	- Some of the possibilites for WHERE clause are given below:
+		SELECT * FROM cats WHERE age=4; 
+		SELECT * FROM cats WHERE name='Egg'; 
+		SELECT * FROM cats WHERE name='egG'; 
+
+UPDATE Clause:
+	- UPDATE clause is used to change the existing record data.
+	- Typical use case is to update/change a users password.
+	Ex:
+		UPDATE table_name SET column_name = <NEW VALUE> WHERE <condition>
+		UPDATE cats
+		SET breed = 'Maine Coon'
+		WHERE name ='Tammy'
+
+DELETE Clause:
+	- DELETE clause is used to delete entries from the database tables.
+	Ex:
+		DELETE FROM table_name; // Deletes all the entires in the table called table_name.
+		DELETE FROM table_name WHERE <condition> // Deletes all the entries in the table which satisfy the condition.
+
+	- You can put all your sql code inside a .sql file and run the whole file at once.
+	- This is useful when creating and inserting a whole bunch of data.
+	- Once you create a .sql file. Put it in the workspace and then run the command "source <filename>.sql" to run the  file.
+
+String Functions:
+Concat:
+	- Used to concat the fields in to a single column while retrieving.
+	Ex: Select CONCAT(f_name,l_name) AS 'full name' FROM books;
+	- We can add text to be concatinated in between the field names.
+	Ex: Select CONCAT(f_name,' ',l_name) AS 'full name' FROM books;
+		Select CONCAT(f_name,','l_name',') AS 'full name' FROM books;
+	- There is a special implementation of CONCAT called CONCAT_WS which seperates the field using the separator specified.
+	Ex: SELECT CONCAT_WS('-' f_name,l_name,title) FROM books; // Output: <f_name>-<l_name>-<title>

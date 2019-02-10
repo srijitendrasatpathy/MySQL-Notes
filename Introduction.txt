@@ -182,3 +182,94 @@ Concat:
 		Select CONCAT(f_name,','l_name',') AS 'full name' FROM books;
 	- There is a special implementation of CONCAT called CONCAT_WS which seperates the field using the separator specified.
 	Ex: SELECT CONCAT_WS('-' f_name,l_name,title) FROM books; // Output: <f_name>-<l_name>-<title>
+
+SUBSTRING or SUBSTR:
+	- Used to extract a part of the string or a substring from a full text.
+	- Ex: 	SELECT SUBSTRING('Hello World', 1, 4); // Output: Hell
+			SELECT SUBSTRING('Hello World', 7);   // Output: World
+			SELECT SUBSTRING('Hello World', 3, 8);
+			SELECT SUBSTRING('Hello World', 3);
+			SELECT SUBSTRING('Hello World', -3); //Output: rld (Takes the negative index and prints out the sub string to the end.)
+			SELECT SUBSTRING('Hello World', -7);
+
+- We can also combine SUBSTR and CONCAT. Example below:
+	Ex: SELECT CONCAT
+    	(
+        	SUBSTRING(title, 1, 10),
+        	'...'
+    	) AS 'short title'
+		FROM books;
+
+REPLACE:
+	- Used a replace a specific string or character with another string or character.
+	- It is case sensitive. Hence if you want to replace 'o' from the String Olo. It won't replace 'O'.
+	Ex: 	SELECT REPLACE('Hello World', 'Hell', '%$#@');
+			SELECT REPLACE('Hello World', 'l', '7');
+			SELECT REPLACE('Hello World', 'o', '0');
+			SELECT REPLACE('HellO World', 'o', '*');
+	- Just like substring, replace can also be used along side other functions.
+	Ex: 	SELECT
+    		SUBSTRING(REPLACE(title, 'e', '3'), 1, 10)
+			FROM books;
+
+REVERSE:
+	- As the name suggests, this function returns the reverse of a string.
+	Ex: SELECT REVERSE("HELLO WORLD"); // Output: DLROW OLLEH.
+
+CHAR_LENGHT:
+	- As the name suggest, returns the lenght of the string.
+	Ex: SELECT CHAR_LENGHT("Hello World"); // Output: 11
+
+UPPER, LOWER:
+	- As the name suggest these functions are used to change the CASE of the string.
+	Ex: SELECT UPPER("hello world"); // Output: HELLO WORLD
+	Ex: SELECT LOWER("HELLO WORLd"); // Output: hello world
+
+DISTINCT:
+	- Gives out the distinct entries in the field. 
+	- Works on string as well as numeric data.
+	- If you apply distinct on multiple columns, it will return data DISTINCT across all the columns.
+	- Two people may have same last_name, if you apply distinct only on the last_name columns. SQL only returns one entry for that last_name.
+	- If you apply distinct on both first_name and last_name and first_name being differnt and same last_name. SQL will output two different entries.
+	EX:     SELECT author_lname FROM books;
+			SELECT DISTINCT author_lname FROM books;
+			SELECT author_fname, author_lname FROM books;
+			SELECT DISTINCT CONCAT(author_fname,' ', author_lname) FROM books;
+			SELECT DISTINCT author_fname, author_lname FROM books;
+
+ORDER BY:
+	- This clause lets you to order your data in ascending or descending order.
+	- Ordering works on both strings and numbers. Also, aplhanumeric content.
+	- You can also apply order by on multiple columns. The data is first sorted by the first field and then later on by the second field.
+	Ex:		    
+			SELECT author_lname FROM books ORDER BY author_lname;
+			SELECT author_lname FROM books ORDER BY author_lname DESC;
+			SELECT released_year FROM books ORDER BY released_year;
+			SELECT released_year FROM books ORDER BY released_year DESC;
+			SELECT title, released_year, pages FROM books ORDER BY released_year;
+			SELECT title, pages FROM books ORDER BY released_year;
+			
+			SELECT title, author_fname, author_lname 
+			FROM books ORDER BY 2;						// You can just specify the position of the field in the select clause that you want to sort with. In the present query, the output is sorte dby author_fname which is the second field in SELECT clause.
+			
+			SELECT author_fname, author_lname FROM books 
+			ORDER BY author_lname, author_fname;
+
+LIMIT:
+	- This clause lets you limit the number of records you want to show up on the console.
+	- Say you want to just see top 5 books according to total sales. You can sort it by number of copies sold and limit it to 5.
+	Ex:
+		    SELECT title FROM books LIMIT 3;  // Limiting to first 3 books.
+     				
+			SELECT title, released_year FROM books 
+			ORDER BY released_year DESC LIMIT 5; // Results in the top 5 books which were recently released.
+			
+			SELECT title, released_year FROM books 
+			ORDER BY released_year DESC LIMIT 0,5; // Give out the first 5 books in the table.
+			
+			SELECT title, released_year FROM books 
+			ORDER BY released_year DESC LIMIT 10,1; // Gives out the 11th book in the table.
+			
+			SELECT * FROM tbl LIMIT 95,18446744073709551615; // You have to specify a really large number to get all the entires from the table. There is no 'LAST' clause to indicate the end of table.
+
+			

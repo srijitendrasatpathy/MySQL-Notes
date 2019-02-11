@@ -273,3 +273,80 @@ LIMIT:
 			SELECT * FROM tbl LIMIT 95,18446744073709551615; // You have to specify a really large number to get all the entires from the table. There is no 'LAST' clause to indicate the end of table.
 
 			
+LIKE:
+	- Like is used for pattern matching.
+	- You can use a wild card character and a pattern to search through records for match.
+	- You can use a infinite wildcard - %, or a single char wild card - _
+	- If you want to look for a record which contains % or _ in the text itself. You have to use escape character '%\%%' or '%\_%'
+	Ex:
+	  		SELECT title, author_fname FROM books WHERE author_fname LIKE '%da%';
+			SELECT title, author_fname FROM books WHERE author_fname LIKE 'da%';
+			SELECT title FROM books WHERE  title LIKE 'the';
+			SELECT title FROM books WHERE  title LIKE '%the';
+			SELECT title FROM books WHERE title LIKE '%the%';
+
+Aggregate Functions:
+
+COUNT:
+	- Counts the total number of records for a field.
+	- We can add more clauses inside the count to filter out results. Like using DISTINCT.
+	Ex:		    SELECT COUNT(*) FROM books;
+				SELECT COUNT(author_fname) FROM books;
+				SELECT COUNT(DISTINCT author_fname) FROM books;
+				SELECT COUNT(DISTINCT author_lname, author_fname) FROM books;
+				SELECT title FROM books WHERE title LIKE '%the%';
+				SELECT COUNT(*) FROM books WHERE title LIKE '%the%';
+
+GROUP BY:
+	- It summarizes or aggregates identical data into single rows.
+	Ex:
+			SELECT author_lname, COUNT(*) 
+			FROM books GROUP BY author_lname;	
+			
+			SELECT author_fname, author_lname, COUNT(*) FROM books GROUP BY author_lname;
+			SELECT author_fname, author_lname, COUNT(*) FROM books GROUP BY author_lname, author_fname;
+			SELECT released_year, COUNT(*) FROM books GROUP BY released_year;
+			SELECT CONCAT('In ', released_year, ' ', COUNT(*), ' book(s) released') AS year FROM books GROUP BY released_year;
+
+MIN and MAX:
+	- MIN finds the least value of the field. 
+	- MAX finds the highest value of the field.
+	- Works on numerical data only. Doesn't give out the proper output if used to retrieve string related to the record without using a GROUP BY clause.
+	Ex:
+		SELECT MIN(pages) FROM books;
+		SELECT MAX(pages) FROM books;
+		SELECT MAX(pages), title FROM books; // Results in wrong title. The title and Max(pages) aren't related in this case.
+
+	- One potential solution for the problem above is using a sub query.
+	- A subquery is a query within a query. 
+	- The subquery(sometimes referred as inner query) is executed first, the outer query uses the result set of the inner query to further evaluation.
+	- Point to note: Using subqueries is not always suggested as it takes longer to evaluate. As the inner query needs to execute first and then the outer query.
+	- In case it is possible to avoid nested queries do so.
+
+	- Min and Max are just like other Aggregate functions and can be used alongside group by.
+	Ex:		SELECT
+				author_fname,
+				author_lname,
+				Max(pages)
+			FROM books
+			GROUP BY author_lname,
+					author_fname;
+			
+			SELECT
+				CONCAT(author_fname, ' ', author_lname) AS author,
+				MAX(pages) AS 'longest book'
+			FROM books
+			GROUP BY author_lname,
+					author_fname;
+
+SUM:
+	- Just as the name suggests, when applied on a specific field, returns the summation of all the records present in the field.
+	Ex:
+		SELECT author_fname,
+       		author_lname,
+       		Sum(pages)
+		FROM books
+		GROUP BY
+    		author_lname,
+    		author_fname;
+

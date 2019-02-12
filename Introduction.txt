@@ -1,4 +1,4 @@
-SQL tutorial from udemy. By colt:
+My notes from MySQL course on udemy by colt:
 A database is a collection of data which can be manipulated by the tools provided in the database engine.
 
 	Your App =====> || DBMS + DATABASE ||
@@ -162,6 +162,11 @@ UPDATE Clause:
 		UPDATE cats
 		SET breed = 'Maine Coon'
 		WHERE name ='Tammy'
+	- It is possible to filter out records based of a mathematical operation.
+	Ex:
+		SELECT title, released_year FROM books
+		WHERE released_year >= 2000 AND
+		released_year % 2 != 0;
 
 DELETE Clause:
 	- DELETE clause is used to delete entries from the database tables.
@@ -350,3 +355,211 @@ SUM:
     		author_lname,
     		author_fname;
 
+AVG:
+	- Average returns the average of the field it is applied on.
+	Ex:
+		SELECT author_fname, author_lname, AVG(pages) FROM books
+		GROUP BY author_lname, author_fname;
+
+Some important Data Types:
+CHAR:
+	- Used to store strings.
+	- It is of fixed length.
+	- If the string entered is smaller than the specified length, it is right padded with spaces.
+	- The char uses fixed amount of memory to store the strings. 
+	Ex: 
+		CHAR(4)
+		entered text = ab stored as 'ab  ' 4bytes
+		entered text = a stored as 'a   ' 4 bytes
+		entered text = abcdef stored as 'abcd' 4bytes 
+
+DECIMAL:
+	- Used to store  a decimal value.
+	- Usage DECIMAL(5,2)
+	- 5 indicated the largest number stored(Including the digits after decimal point. In this case it would be 999.99), 2 indicated the number digits to store after decimal point.
+	- Exact numbers. No approximation. There can be some rounding off.
+FLOAT and DOUBLE:
+	- Stores approximate values.
+	- Not as exact as DECIMAL.
+	- If precision is important for the application, do not use float or double.
+	- Float and double can be used to store larger numbers using less space in the memory.
+	- Float is precise till 7 digits where as double is precise untill 15 digits
+
+DATE:
+	- Stores date, doesnot store any times. YYYY-MM-DD
+
+TIME
+	- Stores time no date HH:MM:SS
+
+DATETIME:
+	- Stores date and time. YYYY-MM-DD HH:MM:SS
+
+CURDATE():
+	- Returns the current date.
+
+CURTIME():
+	- Returns the current time.
+
+NOW():
+	- Returns the current date time.
+
+DATE_FORMAT(DATE, FORMAT):
+	- Takes in the DATE/TIME/DATETIME field and the converts it to the specified format.
+
+DATEDIFF():
+	- Gives out the no of days between two dates.
+
+DATEADD(DATE, Interval DD/MM/YY HH/MM/SS Unit(Day, month, year, hours, minutes, seconds)):
+	- Give a DATE and what unit of date you want to add to it.
+
+	Ex: 	SELECT DATEDIFF(NOW(), birthdate) FROM people; 
+			SELECT name, birthdate, DATEDIFF(NOW(), birthdate) FROM people;
+			SELECT birthdt FROM people;
+			SELECT birthdt, DATE_ADD(birthdt, INTERVAL 1 MONTH) FROM people;
+			SELECT birthdt, DATE_ADD(birthdt, INTERVAL 10 SECOND) FROM people;
+			SELECT birthdt, DATE_ADD(birthdt, INTERVAL 3 QUARTER) FROM people;
+			SELECT birthdt, birthdt + INTERVAL 1 MONTH FROM people;
+			SELECT birthdt, birthdt - INTERVAL 5 MONTH FROM people;
+			SELECT birthdt, birthdt + INTERVAL 15 MONTH + INTERVAL 10 HOUR FROM people;
+
+TIMESTAMP:
+	- Stores date and time info.
+	- Uses 4 bytes
+	- Stores date btw JAN 1st 1970 to Jan 19th 2038.
+	- DATETIME takes 8 bytes and stores date which range longer.
+	Ex:
+			CREATE TABLE comments2 (
+   						 content VARCHAR(100),
+   						 changed_at TIMESTAMP DEFAULT NOW() ON UPDATE CURRENT_TIMESTAMP
+			);
+
+	- changed_at is setup in such a way that when an update query is ran it automatically updates the TIME_STAMP.
+	
+Logical Operators:
+- Usually used in the WHERE clause to filter out the result set.
+	- 1 is TRUE and 0 is FALSE in MySQL.
+	- Not equals (!=): Ex: year != 2017
+	- Equal (=): Ex: year = 2007
+	- LIKE: Ex: name LIKE '%dave%'
+	- NOT LIKE: Ex: name NOT LIKE '%Jit%'
+	- Greater Than (>): age > 10;
+	- Less Than (<): age < 25;
+	- Logical AND (&& or AND) name = 'Jitendra' && age = 27 (or) name = 'Jitendra' AND age = 27
+	- Logical OR (|| or OR) region = 'India' || region ='US' (or) region = 'India' OR region ='US'
+	- BETWEEN: Generates the results satisfying the range specified. released_year BETWEEN 2004 AND 2012 (Inclusive of the boundaries)
+	- NOT BETWEEN: Generates the results not satisfying the range specified. released_year NOT BETWEEN 2004 AND 2015 (Exclusive of the boundaries)
+	- CAST(): Takes two inputs, one a field or value to convert. Second is the type you want the field/value to convert into.
+			- Often time when using date in filter, MySQL converts the string to date automatically. However, it is slightly slower.
+				Ex:	SELECT name, birthdt FROM people WHERE birthdt BETWEEN '1980-01-01' AND '2000-01-01';
+			- We can explicity use CAST() to convert the field into the DATETIME format to process the query faster.
+				Ex:	SELECT name, birthdt 
+					FROM people
+					WHERE birthdt 
+					BETWEEN CAST('1980-01-01' AS DATETIME)
+    					AND CAST('2000-01-01' AS DATETIME);
+	- IN : Retuns the records that exaclty match the criteria specified in the list.
+		Ex: SELECT title, released_year FROM books
+			WHERE released_year IN (2017, 1985);
+	-NOT IN: Just opposite of IN.
+		Ex: SELECT title, released_year FROM books
+			WHERE released_year >= 2000
+			AND released_year NOT IN 
+			(2000,2002,2004,2006,2008,2010,2012,2014,2016);
+	- CASE: Similar to the programming languages SWITCH cases, we can provide mulitple cases (Image it to be like a gigantic if else tree)
+		Ex: SELECT title, stock_quantity,
+				CASE 
+					WHEN stock_quantity BETWEEN 0 AND 50 THEN '*'
+					WHEN stock_quantity BETWEEN 51 AND 100 THEN '**'
+					WHEN stock_quantity BETWEEN 101 AND 150 THEN '***'
+					ELSE '****'
+				END AS STOCK
+			FROM books;
+
+
+Storing data in multiple tables:
+	- When creating a database schema it is a good idea to store them in multiple tables.
+	- By dividing the relavent information in to multiple tables, we avoid wastage of space.
+	- Generally we use BNF rules to generate schemas.
+	- When dividing the data in to tables, always put a primary key for each table.
+	- Apply foreign key(References to a primary key in one of the existing tables) wherever applicable.
+	- We can use joins on these constraints to generate the huge dataset to perform analysis on.
+	- To create a foreign key from a primary key, the primary key need to exists in the db first.
+	- You cannot delete a primary key table if it is reference a foreign key in another table(s).
+
+Foreign Keys:
+	- Ex:     CREATE TABLE customers(
+				id INT AUTO_INCREMENT PRIMARY KEY,
+				first_name VARCHAR(100),
+				last_name VARCHAR(100),
+				email VARCHAR(100)
+			);
+			CREATE TABLE orders(
+				id INT AUTO_INCREMENT PRIMARY KEY,
+				order_date DATE,
+				amount DECIMAL(8,2),
+				customer_id INT,
+				FOREIGN KEY(customer_id) REFERENCES customers(id)
+			);
+
+JOINS:
+CROSS JOIN: Also called cartesian join. Just a cross multiplication between two tables. 5 * 5 = 25.
+			Mostly meaningless join.
+			Ex: Select * from customers, orders;
+
+INNER JOIN: IMPLICIT SYNTAX. Taking the intersection of two tables.
+			Ex:     SELECT first_name, last_name, order_date, amount
+    				FROM customers, orders 
+        			WHERE customers.id = orders.customer_id;
+
+			EXPLICIT JOIN SYNTAX
+			Ex: 	SELECT * FROM customers
+					JOIN orders
+    				ON customers.id = orders.customer_id;
+LEFT JOIN: - Takes everything from left table and intersection of both the tables and displays them.
+		   - Need to specify LEFT JOIN. Instead of just join.
+		   Ex:	    SELECT first_name, last_name, order_date, amount
+					FROM customers
+					LEFT JOIN orders
+						ON customers.id = orders.customer_id; 
+
+					SELECT 
+						first_name, 
+						last_name,
+						IFNULL(SUM(amount), 0) AS total_spent
+					FROM customers
+					LEFT JOIN orders
+						ON customers.id = orders.customer_id
+					GROUP BY customers.id
+					ORDER BY total_spent;
+
+RIGHT JOIN: - Takes everything from the right table and the intersection results and displays them.
+			- Need to specify RIGHT JOIN.
+			Ex:		SELECT 
+						IFNULL(first_name,'MISSING') AS first, 
+						IFNULL(last_name,'USER') as last, 
+						order_date, 
+						amount, 
+						SUM(amount)
+					FROM customers
+					RIGHT JOIN orders
+						ON customers.id = orders.customer_id
+					GROUP BY first_name, last_name;
+
+CASCADE ON DELETE:
+		- When this option is set. If there is a foreign key constraint set on a primary key column. We can delete the key records and it will delete all the corresponding foreign key records in other tables.
+		Ex:		CREATE TABLE customers(
+				id INT AUTO_INCREMENT PRIMARY KEY,
+				first_name VARCHAR(100),
+				last_name VARCHAR(100),
+				email VARCHAR(100)
+				);
+			
+				CREATE TABLE orders(
+					id INT AUTO_INCREMENT PRIMARY KEY,
+					order_date DATE,
+					amount DECIMAL(8,2),
+					customer_id INT,
+					FOREIGN KEY(customer_id) 
+						REFERENCES customers(id)
+						ON DELETE CASCADE
+				);

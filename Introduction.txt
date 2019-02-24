@@ -506,6 +506,7 @@ CROSS JOIN: Also called cartesian join. Just a cross multiplication between two 
 			Mostly meaningless join.
 			Ex: Select * from customers, orders;
 
+ONE TO MANY:
 INNER JOIN: IMPLICIT SYNTAX. Taking the intersection of two tables.
 			Ex:     SELECT first_name, last_name, order_date, amount
     				FROM customers, orders 
@@ -563,3 +564,149 @@ CASCADE ON DELETE:
 						REFERENCES customers(id)
 						ON DELETE CASCADE
 				);
+
+MANY TO MANY:
+	- Two different tables connected to each other using another table.
+	Ex: Tv_Series ========> Reviews <======== Reviewer
+		The tables Tv_Series and Reviewer are linked through Reviews table.
+	
+Mini Instagram Schema:
+	    CREATE TABLE users (
+        id INTEGER AUTO_INCREMENT PRIMARY KEY,
+        username VARCHAR(255) UNIQUE NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+    );
+     
+    CREATE TABLE photos (
+        id INTEGER AUTO_INCREMENT PRIMARY KEY,
+        image_url VARCHAR(255) NOT NULL,
+        user_id INTEGER NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW(),
+        FOREIGN KEY(user_id) REFERENCES users(id)
+    );
+     
+    CREATE TABLE comments (
+        id INTEGER AUTO_INCREMENT PRIMARY KEY,
+        comment_text VARCHAR(255) NOT NULL,
+        photo_id INTEGER NOT NULL,
+        user_id INTEGER NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW(),
+        FOREIGN KEY(photo_id) REFERENCES photos(id),
+        FOREIGN KEY(user_id) REFERENCES users(id)
+    );
+     
+    CREATE TABLE likes (
+        user_id INTEGER NOT NULL,
+        photo_id INTEGER NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW(),
+        FOREIGN KEY(user_id) REFERENCES users(id),
+        FOREIGN KEY(photo_id) REFERENCES photos(id),
+        PRIMARY KEY(user_id, photo_id)
+    );
+     
+    CREATE TABLE follows (
+        follower_id INTEGER NOT NULL,
+        followee_id INTEGER NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW(),
+        FOREIGN KEY(follower_id) REFERENCES users(id),
+        FOREIGN KEY(followee_id) REFERENCES users(id),
+        PRIMARY KEY(follower_id, followee_id)
+    );
+     
+    CREATE TABLE tags (
+      id INTEGER AUTO_INCREMENT PRIMARY KEY,
+      tag_name VARCHAR(255) UNIQUE,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+     
+    CREATE TABLE photo_tags (
+        photo_id INTEGER NOT NULL,
+        tag_id INTEGER NOT NULL,
+        FOREIGN KEY(photo_id) REFERENCES photos(id),
+        FOREIGN KEY(tag_id) REFERENCES tags(id),
+        PRIMARY KEY(photo_id, tag_id)
+    );
+
+-- Multi Column Primary Key are also called as Composite Keys.
+
+- Use the ig-clone-data.sql to create dummy db to practise quering.
+- Use the solutions.sql to find out the questions and answers for them.
+
+
+Database triggers:
+- Triggers are used are like action listeners. They look for a specific event to occur and if the event does occur, it performs the specified action.
+- Syntax:
+	CREATE TRIGGER trigger_name
+		trigger_time trigger_event ON table_name FOR EACH ROW
+	BEGIN
+	.....
+	END;
+
+- Possible values for the below fields:
+	1. trigger_time : BEFORE, AFTER
+	2. trigger_event : INSERT, UPDATE, DELETE
+	3. table_name : The name on the table on which the trigger to apply.
+
+
+	Ex: Inserting only users who are adults inside the users table. Once you create a table users(name, age as fields) and run this trigger, it will execute everytime you try to insert data.
+		It checks if the user is above 18 or not. 
+
+		DELIMITER $$
+
+			CREATE TRIGGER must_be_adult
+				BEFORE INSERT ON users FOR EACH ROW
+				BEGIN
+					IF NEW.age < 18
+					THEN
+						SIGNAL SQLSTATE '45000'  -- SQLSTATE are error codes which are standard error codes across different SQL databases. MYSQL also has MYSQL specific error codes. 
+								SET MESSAGE_TEXT = 'Must be an adult!';
+					END IF;
+				END;
+			$$
+
+		DELIMITER ;
+
+- Whenever there is a error. MySQL returns two types of error codes.
+	1. MySQL specific error code
+	2. SQLSIGNAL code, which is standard across SQL databases.
+
+	450000 - Is user defined Error code. It means, that the developer should handle the error. When this error code is returned.
+
+	NEW - Contains the new values that is being inserted in to the table. 
+		- Used when you have a INSERT or UPDATE statements.
+		Ex: INSERT INTO email VALUES("somerandomemail@idontknow.com");
+		NEW.email = "somerandomemail@idontknow.com"
+
+	OLD - Contains the previous value of the filed that is being removed or updated.
+		- Used when you have a DELETE OR UPDATE statements.
+
+	DELIMITER - is used to specify the delimiter that MYSQL uses to set the end of a query.
+			  - Default delimited is ;. Meaning as soon as MYSQL reads a semi colon it executes the query.
+			  - However, in the example above, we have seen that we encounter a ; at the "END IF" statement. This is not where the trigger should end.
+			  - Since, the delimiter is set to ; MySQL executes the trigger and gives out an error message.
+			  - Using DELIMITER we are changing the default delimited to something else. Execute the trigger and change the delimited back to default.
+
+			  Syntax:
+			  DELIMITER <SYMBOL_FOR_DELIMITER>
+			  	//SQL Trigger or query
+
+			  <SYMBOL_FOR_DELIMITER> // This indicates the end of the query/trigger.
+			  DELIMITER ; //Setting delimiter back to default.
+			
+
+	Ex: Inserting data into another table based on a event on a seperate table.
+		DELIMITER $$
+
+			CREATE TRIGGER create_unfollow
+				AFTER DELETE ON follows FOR EACH ROW 
+			BEGIN
+				INSERT INTO unfollows
+				SET follower_id = OLD.follower_id,
+					followee_id = OLD.followee_id;
+			END$$
+
+		DELIMITER ;
+
+	
+	SHOW TRIGGERS; - Shows all the triggers in the current database.
+	DROP TRIGGER trigger_name; - Drops the trigger with trigger_name;

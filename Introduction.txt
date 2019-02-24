@@ -710,3 +710,4 @@ Database triggers:
 	
 	SHOW TRIGGERS; - Shows all the triggers in the current database.
 	DROP TRIGGER trigger_name; - Drops the trigger with trigger_name;
+	
